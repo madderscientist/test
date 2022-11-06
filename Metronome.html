@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="ch">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>自定义节拍器</title>
+</head>
+<style>
+    #play {
+        width: 100px;
+        height: 100px;
+        border-radius: 50px;
+    }
+</style>
+
+<body>
+    <button id="play" onclick="play();">start!</button>
+    <button onclick="over();">停止</button>
+    <input type="checkbox" id="firstStrong" checked> 第一拍重音
+    <br>
+    <input type="checkbox" id="readyshoot" checked> 预备拍两拍
+    <textarea id="define" cols="30" rows="10">[[4,120,4],[4,240,4]]</textarea>
+    <p>说明：[一小节几拍, bmp, 打几拍（非正数表示无限）]</p>
+</body>
+<script>
+    const strong = "data:audio/mpeg;base64,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";
+    const weak = "data:audio/mpeg;base64,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";
+    var sau = new Audio(strong);              // 播放强音
+    var wau = new Audio(weak);                // 播放弱音
+
+    // var Nodes = document.getElementById("nodes");   // 可视化添加列表
+
+    var clk = null;                         // 计时器
+    var count = 0;                          // 第几拍
+    var mode = false;
+
+    var firstStrong = true;                 // 是否第一排强音
+    var readyshoot = true;                  // 是否有预备拍
+
+    var todo = [[4, 120, 10], [4, 240, 10]];     // 节拍型顺序表[一小节几拍,bmp,几拍(负数表示永远不结束)]
+
+    function over() {
+        mode = false;
+        document.getElementById("play").innerHTML = "start!";
+        clearInterval(clk);
+    }
+
+    // 从todo第几项开始, 是否有预备拍
+    function start(i, ready = false) {
+        // 重置 与 验证数据合法性
+        clearInterval(clk);
+        count = 0;
+        if (i >= todo.length || i < 0) {
+            over();
+            return;
+        }
+        // 预备拍
+        if (ready) {
+            function readybeat(){
+                if (count++ == 2*todo[i][0]) start(i);
+                else {  // 前一小节重音, 后一小节轻音
+                    if(count<=todo[i][0]) sau.play();
+                    else wau.play();
+                }
+            }
+            clk = setInterval(readybeat, 60000 / todo[i][1]);
+            return;
+        }
+        // 正式打节拍
+        function beat() {
+            if (count >= todo[i][2] && todo[i][2] > 0) {
+                start(i + 1);
+            } else {
+                if (!(count++ % todo[i][0]) && firstStrong) {
+                    sau.play();     // 判断条件不能换位置 不然可能不会++
+                } else wau.play();
+            }
+        }
+        beat();     // 计时器第一次不启动，必须手动调用！！！！
+        clk = setInterval(beat, 60000 / todo[i][1]);
+    }
+
+    // 获取播放信息
+    function getData() {
+        firstStrong = document.getElementById("firstStrong").checked;
+        readyshoot = document.getElementById("readyshoot").checked;
+        todo = JSON.parse(document.getElementById("define").value);
+        return Array.isArray(todo);
+    }
+
+    function play() {
+        mode = true;
+        if (getData()) {
+            start(0, readyshoot);
+            document.getElementById("play").innerHTML = "stop!";
+        }
+    }
+</script>
+
+</html>
