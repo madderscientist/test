@@ -20,8 +20,8 @@
     <button onclick="over();">停止</button>
     <input type="checkbox" id="firstStrong" checked> 第一拍重音
     <br>
-    <input type="checkbox" id="readyshoot" checked> 预备拍两拍
-    <textarea id="define" cols="30" rows="10">[[4,120,4],[4,240,4]]</textarea>
+    <input type="checkbox" id="readyshoot" checked> 预备拍两小节
+    <textarea id="define" cols="30" rows="10">[[4,120,8],[4,240,4],[3,150,9],[2,100,10]</textarea>
     <p>说明：[一小节几拍, bmp, 打几拍（非正数表示无限）]</p>
 </body>
 <script>
@@ -29,8 +29,6 @@
     const weak = "data:audio/mpeg;base64,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";
     var sau = new Audio(strong);              // 播放强音
     var wau = new Audio(weak);                // 播放弱音
-
-    // var Nodes = document.getElementById("nodes");   // 可视化添加列表
 
     var clk = null;                         // 计时器
     var count = 0;                          // 第几拍
